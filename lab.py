@@ -54,9 +54,14 @@ def prepare_dataset(data_path: str, test_size: float = 0.2, seed: int = 42) -> D
 
     Returns a `DatasetDict` with "train" and "test" keys.
     """
-    # Note: using load_dataset instead of Dataset.from_pandas due to
-    # a dill/pickle incompatibility with Python 3.14
-    ds = load_dataset("csv", data_files=data_path, split="train")
+    df = pd.read_csv(data_path)
+    df["label"] = df["label"].astype(int)
+    try:
+        # Standard approach per lab instructions
+        ds = Dataset.from_pandas(df, preserve_index=False)
+    except TypeError:
+        # Fallback for Python 3.14 dill/pickle incompatibility
+        ds = Dataset.from_dict(df.to_dict(orient="list"))
     return ds.train_test_split(test_size=test_size, seed=seed)
 
 
@@ -136,7 +141,7 @@ def train_classifier(
         args=training_args,
         train_dataset=tokenized_ds["train"],
         eval_dataset=tokenized_ds["test"],
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
     )
