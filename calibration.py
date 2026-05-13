@@ -13,7 +13,7 @@ def reliability_diagram(probs: np.ndarray, y_true: np.ndarray, n_bins: int = 10)
 
     Returns (bucket_centers, bucket_accuracies, bucket_counts), all length n_bins.
     """
-    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    edges   = np.linspace(0.0, 1.0, n_bins + 1)
     centers = (edges[:-1] + edges[1:]) / 2.0
 
     confidences = probs.max(axis=1)
@@ -89,39 +89,17 @@ def plot_reliability(centers: np.ndarray, accs: np.ndarray, counts: np.ndarray, 
 if __name__ == "__main__":
     import os
 
-    y_true     = np.load("manual_ytrue.npy")
-    probs_base = np.load("manual_probs.npy")    # T=1.0
-    probs_t    = np.load("manual_probs_t.npy")  # T=1.5
+    probs  = np.load("manual_probs.npy")
+    y_true = np.load("manual_ytrue.npy")
 
-    os.makedirs("figures", exist_ok=True)
+    centers, accs, counts = reliability_diagram(probs, y_true, n_bins=10)
+    ece = expected_calibration_error(probs, y_true, n_bins=10)
 
-    # ── baseline (no scaling) ─────────────────────────────────────────────────
-    centers, accs, counts = reliability_diagram(probs_base, y_true, n_bins=10)
-    ece_base = expected_calibration_error(probs_base, y_true, n_bins=10)
-
-    print(f"ECE (baseline, T=1.0) = {ece_base:.4f}\n")
+    print(f"ECE = {ece:.4f}\n")
     print(f"{'Bucket':>8}  {'Accuracy':>9}  {'Count':>6}")
     for c, a, n in zip(centers, accs, counts):
         print(f"{c:8.2f}  {a:9.4f}  {n:6d}")
 
+    os.makedirs("figures", exist_ok=True)
     plot_reliability(centers, accs, counts, "figures/reliability-diagram.png")
     print("\nSaved: figures/reliability-diagram.png")
-
-    # ── after temperature scaling ─────────────────────────────────────────────
-    centers_t, accs_t, counts_t = reliability_diagram(probs_t, y_true, n_bins=10)
-    ece_t = expected_calibration_error(probs_t, y_true, n_bins=10)
-
-    print(f"\nECE (temperature scaled, T=1.5) = {ece_t:.4f}\n")
-    print(f"{'Bucket':>8}  {'Accuracy':>9}  {'Count':>6}")
-    for c, a, n in zip(centers_t, accs_t, counts_t):
-        print(f"{c:8.2f}  {a:9.4f}  {n:6d}")
-
-    plot_reliability(centers_t, accs_t, counts_t, "figures/reliability-diagram-scaled.png")
-    print("\nSaved: figures/reliability-diagram-scaled.png")
-
-    # ── comparison ───────────────────────────────────────────────────────────
-    print(f"\n{'':=<40}")
-    print(f"ECE baseline : {ece_base:.4f}")
-    print(f"ECE scaled   : {ece_t:.4f}")
-    improvement = (ece_base - ece_t) / ece_base * 100
-    print(f"Improvement  : {improvement:.1f}%")
