@@ -1,0 +1,31 @@
+id,hypothesis_category,text,expected_label,rationale
+1,negation,The latest update did not improve battery life at all.,negative,Tests whether the model picks up the negation cue or just the trigger word 'improve'
+2,lexical_trigger,This app is no longer reliable on my phone.,negative,Strong positive cue 'reliable' negated by 'no longer'; tests cue-vs-context handling
+3,domain_shift,The team won the championship final last weekend.,neutral,Sports content unrelated to app-review training; tests domain-shift robustness
+4,negation,The new version does not crash anymore.,positive,Double negation context; 'crash' is negative but 'not anymore' flips it to positive
+5,negation,I can not say this app has been helpful at all.,negative,Negation of positive cue 'helpful'; tests if model ignores 'not' and reads 'helpful' as positive
+6,negation,The app never freezes on my device.,positive,Tests whether 'never' as negation of negative cue 'freezes' is understood correctly
+7,lexical_trigger,The app used to be fast but now it is painfully slow.,negative,Positive cue 'fast' appears early but overall sentiment is negative; tests if model anchors on first cue
+8,lexical_trigger,Excellent design but absolutely terrible performance.,negative,Strong positive cue 'excellent' followed by strong negative; tests which cue dominates
+9,lexical_trigger,I loved this app until they ruined it with the last update.,negative,Past positive cue 'loved' but current sentiment is negative; tests temporal cue handling
+10,domain_shift,Add two cups of flour and mix until the dough is smooth.,neutral,Recipe instruction with no app-review sentiment; tests domain-shift robustness
+11,domain_shift,Inflation rose by three percent in the last quarter according to analysts.,neutral,Financial news prose unrelated to app reviews; tests domain-shift robustness
+12,domain_shift,The court ruled in favor of the plaintiff after a two week trial.,neutral,Legal news sentence with no app sentiment; tests domain-shift robustness
+13,length_extreme,Crashes always.,negative,Extremely short review of two words; tests if model handles minimal context
+14,length_extreme,Love it.,positive,Very short positive review; tests if model can classify with almost no context
+15,length_extreme,Ok.,neutral,Single ambiguous word review; tests model behavior at minimum possible length
+16,length_extreme,I have been using this application every single day for the past six months and while the interface is clean and the syncing works most of the time I keep running into a frustrating bug where all my saved data disappears after every update which completely ruins the experience and makes me want to uninstall it.,negative,Very long sentence mixing positive and negative signals; tests if model handles long context correctly
+17,length_extreme,This app does everything I need it to do and more the design is beautiful the speed is impressive and I have never once encountered a bug or any kind of issue even after three major updates it just keeps getting better and I recommend it to everyone I know.,positive,Very long positive review with no negative signals; tests model on long positive context
+18,sarcasm,Oh great another update that broke everything again.,negative,Sarcastic use of 'great'; surface form is positive but intended meaning is negative
+19,sarcasm,Wow what an amazing app it only crashes five times a day.,negative,Sarcastic 'amazing'; high crash frequency makes negative intent clear
+20,sarcasm,Totally worth the premium price for an app that does absolutely nothing.,negative,Sarcastic 'worth' and 'nothing'; tests if model detects sarcasm through contradiction
+21,sarcasm,Sure the app deletes my files randomly but at least the icon looks pretty.,negative,Sarcastic minimization of a serious flaw; tests if model catches implied negative sentiment
+22,sarcasm,I just love spending an hour every morning fixing the sync errors this app creates.,negative,Sarcastic 'love' applied to a clearly negative experience; tests surface vs intended sentiment
+23,other,The app is okay I guess.,neutral,Highly hedged and uncommitted review; tests if model handles uncertainty and vagueness without defaulting to positive or negative
+24,other,Some people like it some people don't.,neutral,Balanced and non-committal statement; tests if model handles ambiguous crowd opinion
+25,other,First it was good then bad then good again.,neutral,Oscillating sentiment with no clear final polarity; tests model on mixed temporal signals
+26,other,I switched from this app to a competitor and never looked back.,negative,Implicit negative through abandonment with no explicit negative word; tests if model catches implied sentiment
+27,other,My grandmother uses this app and she seems happy with it.,positive,Indirect positive expressed through a third party; tests if model handles indirect sentiment attribution
+28,negation,The support team was not rude at all.,positive,Negation of negative cue 'rude'; tests if model understands double negative resolving to positive
+29,sarcasm,Best decision I ever made installing this app said no one ever.,negative,Explicit sarcasm marker 'said no one ever'; tests if model catches meta-sarcasm cues
+30,length_extreme,Horrible.,negative,Single strong negative word; tests if model classifies correctly with absolute minimum context
